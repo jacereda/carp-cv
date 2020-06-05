@@ -1,0 +1,27 @@
+(load "glcv.carp")
+(load "OpenGL.carp")
+
+(def t 0)
+
+(defn ccomp [x]
+  (/ (from-int (Int.bit-and x 255)) 255.0f))
+
+(defn update []
+  (do
+    (update! t inc)
+    (GL.clearColor (ccomp (Generics.twice t)) 0.0f (ccomp (Generics.halved t)) (ccomp t))
+    (GL.clear GL.COLOR_BUFFER_BIT)
+    (GL.flush)
+    ))
+
+(defn handle [e]
+  (let-do [z (Int64.zero)]
+    (case (CV.event-type e)
+      CVE.UPDATE (update)
+      ())
+    z))
+
+(defn main []
+  (do
+    (ignore (CV.run handle))
+    0))

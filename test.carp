@@ -1,0 +1,30 @@
+(load "cv.carp")
+(load "OpenGL.carp")
+
+(def t 0)
+
+(defn ccomp [x]
+  (/ (from-int (Int.bit-and x 255)) 255.0f))
+
+(defn update []
+  (do
+    (update! t inc)
+    (GL.clearColor (ccomp (Generics.twice t)) 0.0f 1.0f (ccomp t))
+    (GL.clear GL.COLOR_BUFFER_BIT)
+    (GL.flush)
+    ))
+
+(defn handle [e]
+  (let-do [z (Int64.zero)]
+    (case (CV.event-type e)
+      CVE.UPDATE (update)
+      CVE.MOTION (IO.println* "Motion " (str (CV.event-x e)) " " (str (CV.event-y e)))
+      CVE.DOWN (IO.println* "Pressed " (from-cstr (CV.key-name (CV.event-which e))))
+      CVE.UNICODE (IO.println* "Unicode " (CV.event-unicode e))
+      ())
+    z))
+
+(defn main []
+  (do
+    (ignore (CV.run handle))
+    0))

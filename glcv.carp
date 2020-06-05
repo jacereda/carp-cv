@@ -1,0 +1,57 @@
+; (add-cflag "-I/home/jacereda/src/carp-glcv") ;  XXX
+(add-cflag "-DCV_NO_MAIN=1")
+(add-cflag "-DCV_EXPLICIT_ENTRY=1")
+(add-cflag "-DWL_EGL_PLATFORM")
+(add-pkg "wayland-client")
+(add-pkg "xkbcommon")
+(add-pkg "wayland-egl")
+(add-pkg "egl")
+;(add-pkg "x11")
+
+(register-type Event "const ev *")
+(register-type Key "cvkey")
+
+
+(relative-include "glcv/src/wl.c")
+
+(defmodule CV
+
+  (register run (λ [(λ [a] b)] Int) "cvRun")
+
+  (register width (λ [] unsigned) "cvWidth")
+  (register height (λ [] unsigned) "cvHeight")
+  (register mouse-x (λ [] Int) "cvMouseX")
+  (register mouse-y (λ [] Int) "cvMouseY")
+  (register set-cursor (λ [(Ptr Uint8) Int Int] ()) "cvSetCursor")
+  (register hide-cursor (λ [] ()) "cvHideCursor")
+  (register default-cursor (λ [] ()) "cvDefaultCursor")
+  (register show-keyboard (λ [] ()) "cvShowKeyboard")
+  (register hide-keyboard (λ [] ()) "cvHideKeyboard")
+  (register full-screen (λ [] ()) "cvFullScreen")
+  (register windowed (λ [] ()) "cvWindowed")
+  (register quit (λ [] ()) "cvQuit")
+
+  (register pressed (λ [Key] Int) "cvPressed")
+  (register released (λ [Key] Int) "cvReleased")
+  (register key-name (λ [Key] (Ptr CChar)) "keyName")
+
+
+  (register event-type (λ [Event] Int) "evType")
+  (register event-name (λ [Event] (Ptr CChar)) "evName")
+  (register event-width (λ [Event] Int) "evWidth")
+  (register event-height (λ [Event] Int) "evHeight")
+  (register event-which (λ [Event] Key) "evWhich")
+  (register event-unicode (λ [Event] Char) "evUnicode")
+  (register event-x (λ [Event] Int) "evX")
+  (register event-y (λ [Event] Int) "evY")
+
+  )
+
+
+(defmodule CVE
+  (register UPDATE Int)
+  (register DOWN Int)
+  (register UP Int)
+  (register UNICODE Int)
+  (register MOTION Int)
+  )
