@@ -1,0 +1,48 @@
+(load "glcv.carp")
+
+(defmodule CV
+  (deftype Event
+    (None [])
+    (Init [])
+    (Term [])
+    (GLInit [])
+    (GLTerm [])
+    (Close [])
+    (Update [])
+    (Down [Key])
+    (Up [Key])
+    (Unicode [Char])
+    (Motion [Int Int])
+    (Resize [Int Int])
+    )
+
+  (defn key-name [k]
+    (from-cstr (GLCV.key-name k)))
+
+  (sig translate (Fn [(Ref Ev)] Event))
+  (defn translate [e]
+    (case (GLCV.event-type e)
+      CVE.INIT (CV.Event.Init)
+      CVE.TERM (CV.Event.Term)
+      CVE.GLINIT (CV.Event.GLInit)
+      CVE.GLTERM (CV.Event.GLTerm)
+      CVE.CLOSE (CV.Event.Close)
+      CVE.UPDATE (CV.Event.Update)
+      CVE.DOWN (CV.Event.Down (GLCV.event-which e))
+      CVE.UP (CV.Event.Up (GLCV.event-which e))
+      CVE.UNICODE (CV.Event.Unicode (GLCV.event-unicode e))
+      CVE.MOTION (CV.Event.Motion (GLCV.event-x e) (GLCV.event-y e))
+      (CV.Event.None)
+      ))
+
+  (sig handler (Fn [Event] ()))
+  (def handler (fn [e] ()))
+
+  (defn-do run [handle]
+    (set! handler handle)
+    (GLCV.run (fn [e] (do
+                        (handler (translate e))
+                        (Int64.zero)))))
+  )
+
+(implements str CV.key-name)

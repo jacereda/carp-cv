@@ -8,13 +8,13 @@
 (add-pkg "egl")
 ;(add-pkg "x11")
 
-(register-type Event "const ev *")
+(register-type Ev "const ev")
 (register-type Key "cvkey")
 
 
 (relative-include "glcv/src/wl.c")
 
-(defmodule CV
+(defmodule GLCV
 
   (register run (λ [(λ [a] b)] Int) "cvRun")
 
@@ -36,19 +36,24 @@
   (register key-name (λ [Key] (Ptr CChar)) "keyName")
 
 
-  (register event-type (λ [Event] Int) "evType")
-  (register event-name (λ [Event] (Ptr CChar)) "evName")
-  (register event-width (λ [Event] Int) "evWidth")
-  (register event-height (λ [Event] Int) "evHeight")
-  (register event-which (λ [Event] Key) "evWhich")
-  (register event-unicode (λ [Event] Char) "evUnicode")
-  (register event-x (λ [Event] Int) "evX")
-  (register event-y (λ [Event] Int) "evY")
+  (register event-type (λ [(Ref Ev)] Int) "evType")
+  (register event-name (λ [(Ref Ev)] (Ptr CChar)) "evName")
+  (register event-width (λ [(Ref Ev)] Int) "evWidth")
+  (register event-height (λ [(Ref Ev)] Int) "evHeight")
+  (register event-which (λ [(Ref Ev)] Key) "evWhich")
+  (register event-unicode (λ [(Ref Ev)] Char) "evUnicode")
+  (register event-x (λ [(Ref Ev)] Int) "evX")
+  (register event-y (λ [(Ref Ev)] Int) "evY")
 
   )
 
 
 (defmodule CVE
+  (register INIT Int)
+  (register TERM Int)
+  (register GLINIT Int)
+  (register GLTERM Int)
+  (register CLOSE Int)
   (register UPDATE Int)
   (register DOWN Int)
   (register UP Int)

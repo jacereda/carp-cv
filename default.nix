@@ -8,7 +8,7 @@ with import <nixpkgs> {};
     in
       stdenv.mkDerivation {
         name = "shell-environment";
-        nativeBuildInputs = with pkgs; [ pkg-config wayland-protocols tinycc clang strace ];
+        nativeBuildInputs = with pkgs; [ pkg-config wayland-protocols tinycc clang strace gdb ];
         buildInputs = mylibs;
         CARP_DIR="../Carp";
         PATH="../Carp/dist-newstyle/build/x86_64-linux/ghc-8.8.3/CarpHask-0.3.0.0/x/carp/build/carp";

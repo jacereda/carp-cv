@@ -1,4 +1,4 @@
-(load "glcv.carp")
+(load "cv.carp")
 (load "OpenGL.carp")
 
 (def t 0)
@@ -6,20 +6,26 @@
 (defn ccomp [x]
   (/ (from-int (Int.bit-and x 255)) 255.0f))
 
-(defn update []
-  (do
-    (update! t inc)
-    (GL.clearColor (ccomp (Generics.twice t)) 0.0f (ccomp (Generics.halved t)) (ccomp t))
-    (GL.clear GL.COLOR_BUFFER_BIT)
-    (GL.flush)
-    ))
+(defn-do update []
+  (update! t inc)
+  (GL.clearColor (ccomp (Generics.twice t)) 0.0f (ccomp (Generics.halved t)) (ccomp t))
+  (GL.clear GL.COLOR_BUFFER_BIT)
+  (GL.flush)
+  )
 
 (defn handle [e]
-  (let-do [z (Int64.zero)]
-    (case (CV.event-type e)
-      CVE.UPDATE (update)
-      ())
-    z))
+  (match e
+         (CV.Event.None) (println* "None")
+         (CV.Event.Init) (println* "Init")
+         (CV.Event.Term) (println* "Term")
+         (CV.Event.GLInit) (println* "GLInit")
+         (CV.Event.GLTerm) (println* "GLTerm")
+         (CV.Event.Up k) (println* "Up " k)
+         (CV.Event.Down k) (println* "Down " k)
+         (CV.Event.Unicode c) (println* "Unicode " c)
+         (CV.Event.Motion x y) (println* "Motion " x " " y)
+         (CV.Event.Update) (update)
+         ))
 
 (defn main []
   (do
