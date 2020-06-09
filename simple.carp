@@ -14,16 +14,16 @@
   )
 
 (defn handle [e]
-  (match e
-         (CV.Event.None) (println* "None")
-         (CV.Event.Init) (println* "Init")
-         (CV.Event.Term) (println* "Term")
-         (CV.Event.GLInit) (println* "GLInit")
-         (CV.Event.GLTerm) (println* "GLTerm")
-         (CV.Event.Up k) (println* "Up " k)
-         (CV.Event.Down k) (println* "Down " k)
-         (CV.Event.Unicode c) (println* "Unicode " c)
-         (CV.Event.Motion x y) (println* "Motion " x " " y)
+  (match-ref &e
+         (CV.Event.None) (IO.println* e)
+         (CV.Event.Init) (IO.println* e)
+         (CV.Event.Term) (IO.println* e)
+         (CV.Event.GLInit) (IO.println* e)
+         (CV.Event.GLTerm) (IO.println* e)
+         (CV.Event.Up k) (IO.println* e)
+         (CV.Event.Down k) (IO.println* e)
+         (CV.Event.Unicode c) (IO.println* e)
+         (CV.Event.Motion x y) (IO.println* e)
          (CV.Event.Update) (update)
          ))
 

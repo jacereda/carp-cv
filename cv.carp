@@ -1,6 +1,11 @@
 (load "glcv.carp")
 
 (defmodule CV
+  (defn key-name [k]
+    (from-cstr (Unsafe.coerce (GLCV.key-name k))))
+  (implements str CV.key-name)
+  (implements prn CV.key-name)
+
   (deftype Event
     (None [])
     (Init [])
@@ -16,8 +21,25 @@
     (Resize [Int Int])
     )
 
-  (defn key-name [k]
-    (from-cstr (GLCV.key-name k)))
+  (sig event-string (Fn [Event] String))
+  (defn event-string [e]
+    (match e
+         (CV.Event.None) @"(None)"
+         (CV.Event.Init) @"(Init)"
+         (CV.Event.Term) @"(Term)"
+         (CV.Event.GLInit) @"(GLInit)"
+         (CV.Event.GLTerm) @"(GLTerm)"
+         (CV.Event.Close) @"(Close)"
+         (CV.Event.Update) @"(Update)"
+         (CV.Event.Down k) (concat &[@"(Down " (str k) @")"])
+         (CV.Event.Up k) (concat &[@"(Up " (str k) @")"])
+         (CV.Event.Unicode c) (concat &[@"(Unicode " (str c) @")"])
+         (CV.Event.Motion x y) (concat &[@"(Motion " (str x) @" " (str y) @")"])
+         (CV.Event.Resize x y) (concat &[@"(Resize " (str x) @" " (str y) @")"])
+         ))
+  (implements str CV.event-string)
+  (implements prn CV.event-string)
+
 
   (sig translate (Fn [(Ref Ev)] Event))
   (defn translate [e]
@@ -44,5 +66,3 @@
                         (handler (translate e))
                         (Int64.zero)))))
   )
-
-(implements str CV.key-name)

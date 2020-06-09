@@ -1,4 +1,3 @@
-; (add-cflag "-I/home/jacereda/src/carp-glcv") ;  XXX
 (add-cflag "-DCV_NO_MAIN=1")
 (add-cflag "-DCV_EXPLICIT_ENTRY=1")
 (add-cflag "-DWL_EGL_PLATFORM")
@@ -6,10 +5,10 @@
 (add-pkg "xkbcommon")
 (add-pkg "wayland-egl")
 (add-pkg "egl")
-;(add-pkg "x11")
 
 (register-type Ev "const ev")
 (register-type Key "cvkey")
+(register-type CCChar "const char")
 
 
 (relative-include "glcv/src/wl.c")
@@ -33,7 +32,7 @@
 
   (register pressed (λ [Key] Int) "cvPressed")
   (register released (λ [Key] Int) "cvReleased")
-  (register key-name (λ [Key] (Ptr CChar)) "keyName")
+  (register key-name (λ [Key] (Ptr CCChar)) "keyName")
 
 
   (register event-type (λ [(Ref Ev)] Int) "evType")
