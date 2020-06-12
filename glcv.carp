@@ -1,17 +1,29 @@
-(add-cflag "-DCV_NO_MAIN=1")
-(add-cflag "-DCV_EXPLICIT_ENTRY=1")
-(add-cflag "-DWL_EGL_PLATFORM")
-(add-pkg "wayland-client")
-(add-pkg "xkbcommon")
-(add-pkg "wayland-egl")
-(add-pkg "egl")
-
 (register-type Ev "const ev")
 (register-type Key "cvkey")
 (register-type CCChar "const char")
 
+(add-cflag "-DCV_NO_MAIN=1")
+(add-cflag "-DCV_EXPLICIT_ENTRY=1")
+(add-cflag "-Wno-incompatible-pointer-types-discards-qualifiers")
 
-(relative-include "glcv/src/wl.c")
+(relative-include "glcv/src/cv.h")
+
+(linux-only
+ (add-cflag "-DWL_EGL_PLATFORM")
+ (add-pkg "wayland-client")
+ (add-pkg "xkbcommon")
+ (add-pkg "wayland-egl")
+ (add-pkg "egl")
+ (add-cflag "glcv/src/wl.c")
+ )
+(mac-only
+ (add-cflag "glcv/src/cocoaarc.m")
+ (add-lib "-framework CoreGraphics")
+ (add-lib "-framework AppKit")
+ (add-lib "-framework Foundation")
+ (add-lib "-framework CoreFoundation")
+ )
+
 
 (defmodule GLCV
 
