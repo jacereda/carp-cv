@@ -73,7 +73,7 @@
   )
 
 (defmodule CVK
-  (register MOUSELEFT Int)
-  (register MOUSERIGHT Int)
-  (register MOUSEMIDDLE Int)
+  (register MOUSELEFT Key)
+  (register MOUSERIGHT Key)
+  (register MOUSEMIDDLE Key)
   )
