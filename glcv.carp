@@ -71,3 +71,9 @@
   (register UNICODE Int)
   (register MOTION Int)
   )
+
+(defmodule Key
+  (register MOUSELEFT "CVK_MOUSELEFT")
+  (register MOUSERIGHT "CVK_MOUSERIGHT")
+  (register MOUSEMIDDLE "CVK_MOUSEMIDDLE")
+  )
