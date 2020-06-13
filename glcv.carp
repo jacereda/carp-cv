@@ -72,8 +72,8 @@
   (register MOTION Int)
   )
 
-(defmodule Key
-  (register MOUSELEFT "CVK_MOUSELEFT")
-  (register MOUSERIGHT "CVK_MOUSERIGHT")
-  (register MOUSEMIDDLE "CVK_MOUSEMIDDLE")
+(defmodule CVK
+  (register MOUSELEFT Int)
+  (register MOUSERIGHT Int)
+  (register MOUSEMIDDLE Int)
   )
