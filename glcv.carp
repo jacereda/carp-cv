@@ -72,6 +72,15 @@
   (register MOTION Int)
   )
 
+(defmodule CVQ
+  (register NAME Int)
+  (register LOGGER Int)
+  (register XPOS Int)
+  (register YPOS Int)
+  (register WIDTH Int)
+  (register HEIGHT Int)
+  )
+
 (defmodule CVK
   (register MOUSELEFT Key)
   (register MOUSERIGHT Key)

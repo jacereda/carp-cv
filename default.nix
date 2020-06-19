@@ -13,13 +13,13 @@ with import <nixpkgs> {};
     in
       stdenv.mkDerivation {
         name = "shell-environment";
-        nativeBuildInputs = with pkgs; [ pkg-config clang gdb ]
+        nativeBuildInputs = with pkgs; [ pkg-config clang gdb carp ]
                                        ++ lib.optionals stdenv.isLinux [ wayland-protocols strace tinycc ];
         buildInputs = osLibs ++ frameworks;
         LIBRARY_PATH=libs;
         FRAMEWORK_PATH=frameworks;
         LD_LIBRARY_PATH=libs;
-        PATH="${carp}/bin";
+#        PATH="${carp}/bin";
         XDGSHELL= lib.optionalString stdenv.isLinux "${wayland-protocols}/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml";
       };
 }

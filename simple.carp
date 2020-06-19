@@ -13,6 +13,14 @@
   (GL.flush)
   )
 
+(defn query [q]
+  (match-ref &q
+             (CV.Query.Width) 512
+             (CV.Query.Height) 512
+             (CV.Query.X-pos) 100
+             (CV.Query.Y-pos) 200
+             ))
+
 (defn handle [e]
   (match-ref &e
          (CV.Event.None) (IO.println* e)
@@ -25,9 +33,8 @@
          (CV.Event.Unicode c) (IO.println* e)
          (CV.Event.Motion x y) (IO.println* e)
          (CV.Event.Update) (update)
+;         (CV.Event.Width) 512l
          ))
 
 (defn main []
-  (do
-    (ignore (CV.run handle))
-    0))
+    (ignore (CV.run query handle)))

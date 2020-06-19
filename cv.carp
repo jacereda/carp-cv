@@ -21,6 +21,23 @@
     (Resize [Int Int])
     )
 
+;;   (deftype SQuery
+;;     (Name []))
+;; ;    (Logger [])
+
+  (deftype Query
+    (X-pos [])
+    (Y-pos [])
+    (Width [])
+    (Height [])
+    )
+
+  (deftype QE
+    (Query [Query])
+    (Event [Event])
+    (None [])
+    )
+
   (sig event-string (Fn [Event] String))
   (defn event-string [e]
     (match e
@@ -41,28 +58,50 @@
   (implements prn CV.event-string)
 
 
-  (sig translate (Fn [(Ref Ev)] Event))
+  (sig query-string (Fn [Query] String))
+  (defn query-string [e]
+    (match e
+         (CV.Query.X-pos) @"(X-pos)"
+         (CV.Query.Y-pos) @"(Y-pos)"
+         (CV.Query.Width) @"(Width)"
+         (CV.Query.Height) @"(Height)"
+         ))
+  (implements str CV.query-string)
+  (implements prn CV.query-string)
+
+
+  (sig translate (Fn [(Ref Ev)] QE))
   (defn translate [e]
     (case (GLCV.event-type e)
-      CVE.INIT (CV.Event.Init)
-      CVE.TERM (CV.Event.Term)
-      CVE.GLINIT (CV.Event.GLInit)
-      CVE.GLTERM (CV.Event.GLTerm)
-      CVE.CLOSE (CV.Event.Close)
-      CVE.UPDATE (CV.Event.Update)
-      CVE.DOWN (CV.Event.Down (GLCV.event-which e))
-      CVE.UP (CV.Event.Up (GLCV.event-which e))
-      CVE.UNICODE (CV.Event.Unicode (GLCV.event-unicode e))
-      CVE.MOTION (CV.Event.Motion (GLCV.event-x e) (GLCV.event-y e))
-      (CV.Event.None)
+      CVE.INIT (QE.Event (CV.Event.Init))
+      CVE.TERM (QE.Event (CV.Event.Term))
+      CVE.GLINIT (QE.Event (CV.Event.GLInit))
+      CVE.GLTERM (QE.Event (CV.Event.GLTerm))
+      CVE.CLOSE (QE.Event (CV.Event.Close))
+      CVE.UPDATE (QE.Event (CV.Event.Update))
+      CVE.DOWN (QE.Event (CV.Event.Down (GLCV.event-which e)))
+      CVE.UP (QE.Event (CV.Event.Up (GLCV.event-which e)))
+      CVE.UNICODE (QE.Event (CV.Event.Unicode (GLCV.event-unicode e)))
+      CVE.MOTION (QE.Event (CV.Event.Motion (GLCV.event-x e) (GLCV.event-y e)))
+      ;; CVQ.NAME (QE.SQuery (CV.SQuery.Name))
+      CVQ.XPOS (QE.Query (CV.Query.X-pos))
+      CVQ.YPOS (QE.Query (CV.Query.Y-pos))
+      CVQ.WIDTH (QE.Query (CV.Query.Width))
+      CVQ.HEIGHT (QE.Query (CV.Query.Height))
+      (QE.None)
       ))
 
   (sig handler (Fn [Event] ()))
   (def handler (fn [e] ()))
+  (sig querier (Fn [Query] Int))
+  (def querier (fn [e] 0))
 
-  (defn-do run [handle]
+  (defn-do run [query handle]
     (set! handler handle)
-    (GLCV.run (fn [e] (do
-                        (handler (translate e))
-                        (Int64.zero)))))
+    (set! querier query)
+    (GLCV.run (fn [e] (match (translate e)
+                             (QE.Event qe) (do (handler qe) (Int64.zero))
+                             (QE.Query qq) (Int64.from-long (Long.from-int (querier qq)))
+                             (QE.None) (Int64.zero)
+                             ))))
   )
